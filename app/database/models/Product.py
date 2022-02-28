@@ -8,8 +8,7 @@ class Product(db.Model):
   image       = db.Column("image", db.String(400))
   description = db.Column("description", db.String(400))
 
-  def __init__(self, id, name, price, image, description):
-    self.id = id
+  def __init__(self, name, price, image, description):
     self.name = name
     self.price = price
     self.image = image

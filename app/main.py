@@ -11,38 +11,62 @@ app.app_context().push()
 with app.app_context():
   db.create_all()
 
-# Select all
+# Select all products
 @app.route("/products", methods=["GET"])
 def getAllProducts():
-  products = ProductRepo.getAll
-  print("products: ",products)
+  products = ProductRepo.getAll()
+
   return products
 
-@app.route("/products/<id>", methods=["GET"])
+# Select product by id
+@app.route("/products/<int:id>", methods=["GET"])
 def getProductById(id):
   product = ProductRepo.getById(id=id)
 
-  if (not len(product)):
-    return response(400, "Não tem nenhum produto com esse id")
-
-  print("product: ",product)
   return product
 
-#create product
+# Create product
 @app.route("/products", methods=["POST"])
 def createProduct():
-    body = request.get_json()
+  body = request.get_json()
+  
+  if ("name" not in body):
+    return response(400, "A")
 
-    product = ProductRepo.create(
-      body["name"],
-      body["price"],
-      body["image"],
-      body["description"], 
-    )
+  product = ProductRepo.create(
+    name = body["name"],
+    price = body["price"],
+    image = body["image"],
+    description = body["description"], 
+  )
 
-    print("PRODUCT: ",product)
+  return response(201, "Produto criado com sucesso", "product", product)
 
-    return response(200, "Usuário criado", "product", product)
+# Update product
+@app.route("/products/<int:id>", methods=["PUT"])
+def updateProduct(id):
+  body = request.get_json()
+
+  ProductRepo.update(
+    id,
+    body["name"],
+    body["price"],
+    body["image"],
+    body["description"], 
+  )
+
+  return response(201, "Produto atualizado com sucesso")
+
+# Delete product
+@app.route("/products/<int:id>", methods=["DELETE"])
+def deleteProduct(id):
+  try:
+    ProductRepo.delete(id)
+
+    return response(201, "Produto deletado com sucesso")
+  except Exception as e:
+    print("Erro: ",e)
+    return response(400, "Erro ao deletar produto", "products", {})
 
 def response(status, message, nameContent=False, content=False):
   response = {}
