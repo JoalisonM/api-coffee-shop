@@ -62,7 +62,7 @@ def updateProduct(id):
   try:
     body = request.get_json()
 
-    ProductRepo.update(
+    product = ProductRepo.update(
       id,
       body["name"],
       body["price"],
@@ -70,7 +70,7 @@ def updateProduct(id):
       body["description"], 
     )
 
-    return response(201, "Produto atualizado com sucesso")
+    return response(201, "Produto atualizado com sucesso", "product", product)
 
   except:
     return (400, "Erro ao atualizar produto", "products", {})

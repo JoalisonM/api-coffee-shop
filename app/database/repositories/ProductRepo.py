@@ -36,6 +36,8 @@ class ProductRepo:
     db.session.add(product)
     db.session.commit()
 
+    return product.toJson()
+
   def delete(id):
     product = Product.query.filter_by(id=id).first()
     db.session.delete(product)
