@@ -21,9 +21,14 @@ def getAllProducts():
 # Select product by id
 @app.route("/products/<int:id>", methods=["GET"])
 def getProductById(id):
-  product = ProductRepo.getById(id=id)
+  try:
+    product = ProductRepo.getById(id=id)
 
-  return product
+    if (len(product) > 0):
+      return product
+
+  except:
+    return response(400, "Não tem nenhum produto com esse id")
 
 # Create product
 @app.route("/products", methods=["POST"])
@@ -45,17 +50,21 @@ def createProduct():
 # Update product
 @app.route("/products/<int:id>", methods=["PUT"])
 def updateProduct(id):
-  body = request.get_json()
+  try:
+    body = request.get_json()
 
-  ProductRepo.update(
-    id,
-    body["name"],
-    body["price"],
-    body["image"],
-    body["description"], 
-  )
+    ProductRepo.update(
+      id,
+      body["name"],
+      body["price"],
+      body["image"],
+      body["description"], 
+    )
 
-  return response(201, "Produto atualizado com sucesso")
+    return response(201, "Produto atualizado com sucesso")
+
+  except:
+    return (400, "Erro ao atualizar produto", "products", {})
 
 # Delete product
 @app.route("/products/<int:id>", methods=["DELETE"])
@@ -64,6 +73,7 @@ def deleteProduct(id):
     ProductRepo.delete(id)
 
     return response(201, "Produto deletado com sucesso")
+
   except Exception as e:
     print("Erro: ",e)
     return response(400, "Erro ao deletar produto", "products", {})

@@ -5,7 +5,7 @@ from database.models.Product import Product
 class ProductRepo:
 
   def getAll():
-    products = db.session.query(Product).all()
+    products = Product.query.all()
     jsonProducts = []
     for i in range(len(products)):
       jsonProducts.append(products[i].toJson())
@@ -13,12 +13,9 @@ class ProductRepo:
     return json.dumps(jsonProducts)
   
   def getById(id):
-    product = db.session.query(Product).filter(Product.id == id).all()
-    jsonProduct = []
-    for i in range(len(product)):
-      jsonProduct.append(product[i].toJson())
+    product = Product.query.filter_by(id=id).first()
 
-    return json.dumps(jsonProduct)
+    return json.dumps(product.toJson())
 
   def create(name, price, image, description):
     product = Product(name, price, image, description)
