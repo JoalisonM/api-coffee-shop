@@ -36,7 +36,16 @@ def createProduct():
   body = request.get_json()
   
   if ("name" not in body):
-    return response(400, "A")
+    return response(400, "O name é obrigatório")
+  
+  if ("price" not in body):
+    return response(400, "O price é obrigatório")
+  
+  if ("image" not in body):
+    return response(400, "O image é obrigatório")
+  
+  if ("description" not in body):
+    return response(400, "O description é obrigatório")
 
   product = ProductRepo.create(
     name = body["name"],
