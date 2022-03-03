@@ -27,11 +27,20 @@ class ProductRepo:
   def update(id, name, price, image, description):
     product = Product.query.filter_by(id=id).first()
 
-    print("product: ",product)
     product.name = name
     product.price = price
     product.image = image
     product.description = description
+
+    db.session.add(product)
+    db.session.commit()
+
+    return product.toJson()
+  
+  def updateName(id, name):
+    product = Product.query.filter_by(id=id).first()
+
+    product.name = name
 
     db.session.add(product)
     db.session.commit()

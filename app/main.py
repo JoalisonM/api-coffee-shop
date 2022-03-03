@@ -75,6 +75,21 @@ def updateProduct(id):
   except:
     return (400, "Erro ao atualizar produto", "products", {})
 
+# Update product name
+@app.route("/products/<int:id>", methods=["PATCH"])
+def updateProductName(id):
+  try:
+    body = request.get_json()
+
+    product = ProductRepo.updateName(
+      id,
+      body["name"]
+    )
+
+    return response(201, "Nome do produto atualizado com sucesso", "product", product)
+  except:
+    return (400, "Erro ao atualizar nome do produto", "products", {})
+
 # Delete product
 @app.route("/products/<int:id>", methods=["DELETE"])
 def deleteProduct(id):
